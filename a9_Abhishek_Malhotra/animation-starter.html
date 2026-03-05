@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Babylon.js sample code</title>
+
+    <!-- Babylon.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+    <script src="https://cdn.babylonjs.com/recast.js"></script>
+    <script src="https://cdn.babylonjs.com/ammo.js"></script>
+    <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
+    <script src="https://cdn.babylonjs.com/cannon.js"></script>
+    <script src="https://cdn.babylonjs.com/Oimo.js"></script>
+    <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://cdn.babylonjs.com/addons/babylonjs.addons.min.js"></script>
+    <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        #canvasZone {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+        var createScene = function () {
+            // SETUP ###############################################
+            // this is the same setup as the default Playground scene, but with a box instead of a sphere and an arc rotate camera instead of free camera
+
+            // This creates a basic Babylon Scene object (non-mesh)
+            var scene = new BABYLON.Scene(engine);
+
+            // Using Arc rotate camera instead of free camera
+            const camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI / 2, Math.PI / 4, 20, new BABYLON.Vector3.Zero());
+
+            // This targets the camera to scene origin
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            // This attaches the camera to the canvas
+            camera.attachControl(canvas, true);
+
+
+            var cosmic_latte = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 5, 0), scene);
+            cosmic_latte.diffuse = new BABYLON.Color3(1.0, 0.972, 0.906)
+
+            cosmic_latte.intensity = 1;
+            var infraredLight = new BABYLON.PointLight("infraredLight", new BABYLON.Vector3(0, 10, 0), scene);
+
+            // Use a false-color to represent infrared (deep orange/red)
+            infraredLight.diffuse = new BABYLON.Color3.FromHexString("#FF4500"); // Orange-red
+
+
+            infraredLight.intensity = 0.4;
+
+            // Optional: Slight red tint for the specular reflection
+            infraredLight.specular = new BABYLON.Color3(1, 0.3, 0.1);
+
+
+
+
+            scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+            var background = new BABYLON.Layer("background", "milky_way.jpg", scene);
+
+
+
+            let ring = BABYLON.MeshBuilder.CreateTorus("torus", { diameter: 5, thickness: 0.1, tessellation: 1000 }, scene);
+            ring.material = new BABYLON.StandardMaterial("torus-material");
+            ring.material.specularPower = 1000;
+            ring.material.diffuseTexture = new BABYLON.Texture("ring.png");
+
+            ring.position.set(0, -2, 5);
+            var saturn = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 10 }, scene);
+            saturn.material = new BABYLON.StandardMaterial("sphere-material");
+            saturn.material.diffuseTexture = new BABYLON.Texture("saturn.jpg");
+
+            saturn.position.set(0, -2, 5);
+
+            var moons = []; // Array to store moon objects
+
+            for (let i = 0; i < 3; i++) {
+                let moon = BABYLON.MeshBuilder.CreateSphere(`moon${i + 1}`, { diameter: 1, segments: 8 }, scene);
+                moon.material = new BABYLON.StandardMaterial(`moon${i + 1}-material`, scene);
+                moon.material.diffuseColor = new BABYLON.Color3(0.5 + i * 0.1, 0.5 + i * 0.1, 0.5 + i * 0.1); // Different shades of grey
+                moon.material.diffuseTexture = new BABYLON.Texture("moon.jpg");
+
+                // Set initial orbital positions and radii for each moon
+                let radius = 5 + i * 3;  // Increase radius for each moon
+                moon.metadata = {
+                    radius: radius,
+                    angularSpeed: 0.01 + 0.001 * i, // Angular speed for each moon (different speeds)
+                    angle: 0  // Initial angle (start from 0)
+                };
+
+
+
+                moons.push(moon);  // Store moon in array
+            }
+            moons[0].position.y = 0;
+            moons[1].position.y = 2;
+            moons[2].position.y = -4;
+            scene.registerBeforeRender(function () {
+                for (let i = 0; i < moons.length; i++) {
+                    // Update the moon's angle based on its angular speed
+                    moons[i].metadata.angle += moons[i].metadata.angularSpeed;
+
+                    // Calculate new position based on angle (orbital movement around the X-axis)
+                    let x = moons[i].metadata.radius * Math.cos(moons[i].metadata.angle); // X-axis movement
+                    let z = moons[i].metadata.radius * Math.sin(moons[i].metadata.angle); // Z-axis movement
+
+                    // Update moon's position relative to the planet
+                    moons[i].position.x = x;
+                    moons[i].position.z = z;
+
+
+                }
+                saturn.y += 0.01;
+                ring.rotation.y += 0.01;
+
+            });
+
+
+            return scene;
+        };
+        window.initFunction = async function () {
+
+
+
+            var asyncEngineCreation = async function () {
+                try {
+                    return createDefaultEngine();
+                } catch (e) {
+                    console.log("the available createEngine function failed. Creating the default engine instead");
+                    return createDefaultEngine();
+                }
+            }
+
+            window.engine = await asyncEngineCreation();
+
+            const engineOptions = window.engine.getCreationOptions?.();
+            if (!engineOptions || engineOptions.audioEngine !== false) {
+
+            }
+            if (!engine) throw 'engine should not be null.';
+            startRenderLoop(engine, canvas);
+            window.scene = createScene();
+        };
+        initFunction().then(() => {
+            sceneToRender = scene
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
+</html>
