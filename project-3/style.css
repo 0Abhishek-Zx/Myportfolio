@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Rajdhani:wght@300;400;500;600;700&family=Unica+One&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Lacquer&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Rajdhani:wght@300;400;500;600;700&family=Unica+One&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Lacquer&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Rajdhani:wght@300;400;500;600;700&family=Unica+One&display=swap');
+
+
+ol a{
+  color:rgb(82, 174, 114)}
+  
+body {
+  background-color: #000000da;
+  color: white;
+}
+
+.i2{height: 200px;
+}
+.di2{text-align: center;}
+
+h1 {
+  color: rgb(246, 246, 246);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lacquer", serif;
+  z-index: 10;
+  font-weight: 400;
+  font-style: normal;
+  font-size: x-large;
+
+}
+
+
+h2 {
+  font-size: large;
+  font-family: "Lacquer", serif;
+  font-weight: 300;
+  color: rgb(249, 164, 164);
+  
+
+}
+
+p {
+  font-family: "Jost", serif;
+  padding-left: 5px;
+}
+
+p::first-letter {
+  color: rgb(68, 171, 187);
+  font-size: larger;
+  font-family: "Lacquer", serif;
+}
+
+span {
+  color: rgb(68, 171, 187);
+}
+
+nav {
+  color: lightgray;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: white;
+
+  font-family: "Jost";
+  align-items: center;
+  color: #000000d8;
+
+}
+
+nav li {
+  list-style: none;
+  padding: 2px
+
+}
+header nav a:link{color: crimson;
+  text-decoration: none;}
+header nav a:visited{color: slategray;}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+  /* Centers horizontally */
+  align-items: center;
+  /* Centers vertically */
+
+  /* Full viewport height */
+  /* Remove default margin */
+}
+
+video {
+  height: 200px;
+}
+
+img {
+  height: 40px;
+  margin-top: 5px;
+}
+
+footer nav ul {
+  background-color: white
+}
+
+footer nav a {
+  color:black;
+  letter-spacing: 0px;
+  font-family: "Jost";
+}
+#resources{font-family: 'Times New Roman', Times, serif;
+text-decoration: underline;}
+ol{list-style: none;
+}
+
+
+@media screen and (min-width: 800px) {
+
+
+
+  .wrapper {
+    max-width: 1200px;
+
+    margin: auto;
+  }
+
+main{
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
+  align-items: center;
+ 
+
+}
+
+  * .left-column {
+    
+ 
+   max-width: 600px; 
+
+    border: 1px solid white;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 3px rgb(68, 171, 187);
+
+  } 
+
+  nav ul {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+ .right-column {
+    float: right;
+    border: 1px solid white;
+    max-width: 400px; 
+    border-radius: 5px;
+    height: 800px;
+    margin-right: 50px;
+    box-shadow: 5px 5px 1px rgb(68, 171, 187);
+    padding: 10px;
+
+  }
+
+  .right-column h2 {
+    text-align: center;
+    color: white
+  } 
+
+  h2:hover{
+
+    transform: scale(1.04);}
+    h2:hover{transition: 0.4s;}
+
+
+    h1:hover{color:rgb(68, 171, 187);
+    span{color:white};}
+
+    #color:hover{
+      color:  rgb(249, 164, 164);
+
+    }
+    #interests:hover{
+      color:  rgb(249, 164, 164);
+    }
+  .left-column:hover{box-shadow: 5px 5px 1px rgb(60, 188, 139);}
+  .right-column:hover{box-shadow: 5px 5px 1px rgb(60, 188, 139);}
+  nav ul:hover{box-shadow: 5px 5px 1px rgb(60, 188, 139);}
+  nav ul:hover{transition: 0.5s ;}
+
+
+}
